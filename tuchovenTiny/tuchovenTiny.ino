@@ -18,15 +18,16 @@ bool resetLastState = LOW;
 bool startState;
 bool startLastState = LOW;
 long timeElapsed;
-long timeChange = 60000; //cada canto cambia de cor a luz
-bool calling = false;
-bool finished = false;
+long timeChange = 60000; //cada cantos milisegundos cambia de cor a luz
+bool calling = false; //esta chamando o alumno?
+bool finished = false; //acabou o traballo o alumno?
 int val;
 int increment = 1;
-int byteLeds = 7;
+int byteLeds = 7; //numero binario que define o estado dos leds 
+//secuencia de cores para a funcion de chamado
 int colorSequence[] = {2,6,4,1,3}; //purple, blue, cyan, yellow, red
-int colorIndex;
-int longPressDuration = 2000;
+int colorIndex; //valor para seleccionar un elemento da secuencia de cores
+int longPressDuration = 2000; //duracion da pulsacion longa
 long pressedTime;
 
 
@@ -37,6 +38,7 @@ void setup() {
   pinMode (pinB, OUTPUT);
   pinMode (buttonReset, INPUT);
   pinMode (buttonStart, INPUT);
+  //actualizamos o estado dos leds
   changeLight();
 
 }
@@ -46,7 +48,7 @@ void loop() {
   resetState = digitalRead(buttonReset);
   if (resetState != resetLastState){
     if (resetState == HIGH){
-      byteLeds = 7;//isto apaga todos os leds
+      byteLeds = 7;//isto define todos os leds como apagados
       changeLight();
       calling = false;
       finished = false;
@@ -61,18 +63,20 @@ void loop() {
   startState = digitalRead(buttonStart);
   if (startState != startLastState){
     if (startState == HIGH){
-      pressedTime = millis();
-      timeElapsed = millis(); //iniciamos o temporizador
+      pressedTime = millis();//inciamos o temporizador do intre de pulsacion
+      timeElapsed = millis(); //iniciamos o temporizador de tempo transcorrido
       calling = true; //o chamador está a chamar
       finished = false; //non rematou
       colorIndex = 0;
-      byteLeds = colorSequence[colorIndex]; // isto debera acender cyan
+      byteLeds = colorSequence[colorIndex]; // isto debera acender purple
       changeLight();
       startLastState = HIGH;
     }
     else {
+      //ao soltar o boton de start comprobamos se foi pulsacion longa
       long releasedTime = millis();
       long pressedElapsed = releasedTime - pressedTime;
+      //se foi pulsacion longa activamos a secuencia de finished
       if (pressedElapsed > longPressDuration){
         calling = false;
         finished = true;
@@ -95,6 +99,7 @@ void loop() {
       timeElapsed = millis();
     }
   }
+  // se temos rematado activamos a secuencia finished
   if (finished){
     analogWrite(pinG,val);
     val+=increment;
@@ -105,6 +110,7 @@ void loop() {
   }
 }
 
+//esta funcion activa os leds segundo o valor de byteLeds
 //if LED is common anode, comment out the ^1's
 void changeLight() {
   digitalWrite(pinB, bitRead(byteLeds,0)^1);
