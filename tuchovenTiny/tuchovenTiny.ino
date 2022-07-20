@@ -1,11 +1,11 @@
 /*proxecto dun dispositivo para chamar ao profesor, para situar enriba do ordenador.
  * cando o alumno preme o botón, acéndese a luz de chamada, que vai cambiando en función do tempo
  * que leva agardando. A luz apágase premendo o botón de reset.
- * Codigo feito para un LED RGB con cátodo común, cambiar a lóxica se é de ánodo común en changelight().
+ * Codigo feito para un Attiny85 cun LED RGB con cátodo común, cambiar a lóxica se é de ánodo común en changelight().
  * Ollo, programar co reloxo interno de 1MHz para que os tempo sexan reais
  */
 
-//pins para os leds de cores
+//pins para os leds de cores, dacordo coa PCB do proxecto.
 const int pinR = 0;
 const int pinG = 1;
 const int pinB = 2;
